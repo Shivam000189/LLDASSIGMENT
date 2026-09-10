@@ -3,12 +3,43 @@ import mongoose from "mongoose";
 import app from "./app";
 import { config } from "./config/env";
 import { connectDB } from "./config/db";
+import { ProblemModel } from "./models/Problem";
+import { problems } from "./seed/problems";
 
 let server: http.Server | null = null;
+
+// Ensure initial problems are seeded in production if collection is empty
+const ensureProblemsSeeded = async (): Promise<void> => {
+  try {
+    const count = await ProblemModel.countDocuments();
+    if (count === 0) {
+      console.log("[AutoSeed] Problems collection is empty. Auto-seeding initial problems...");
+      for (const problem of problems) {
+        await ProblemModel.findOneAndUpdate(
+          { _id: problem.id },
+          {
+            _id: problem.id,
+            title: problem.title,
+            requirements: problem.requirements,
+            constraints: problem.constraints,
+            expectedEntities: problem.expectedEntities,
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+      }
+      console.log(`[AutoSeed] Seeded ${problems.length} default problems.`);
+    }
+  } catch (err) {
+    console.warn("[AutoSeed] Problem auto-seed skipped or failed:", err);
+  }
+};
 
 const startServer = async (): Promise<void> => {
   // Connect to MongoDB
   await connectDB();
+
+  // Auto-seed problems if necessary
+  await ensureProblemsSeeded();
 
   // Start Express Server
   server = app.listen(config.port, () => {

@@ -4,6 +4,7 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import { config } from "./config/env";
+import { getCorsOptions } from "./config/cors";
 import apiRouter from "./routes";
 import { notFound } from "./middlewares/notFound";
 import { errorHandler } from "./middlewares/errorHandler";
@@ -13,10 +14,11 @@ const app: Application = express();
 // Trust reverse proxy (Cloudflare, Render, Railway, Nginx, ALB)
 app.set("trust proxy", 1);
 
-// Security Headers
+// Security Headers (configured to allow cross-origin requests)
 app.use(
   helmet({
-    contentSecurityPolicy: config.nodeEnv === "production",
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
     crossOriginEmbedderPolicy: false,
   })
 );
@@ -24,15 +26,10 @@ app.use(
 // Response Compression
 app.use(compression());
 
-// CORS Configuration
-app.use(
-  cors({
-    origin: config.corsOrigin,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// CORS Configuration (dynamic origin matching, preflight support, and trailing slash handling)
+const corsOptions = getCorsOptions();
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // Global Rate Limiting (applied unless in test environment)
 if (config.nodeEnv !== "test") {
