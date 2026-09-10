@@ -460,8 +460,35 @@ The server will be running on `http://localhost:5000`.
 | `npm run dev` | Runs the server in development mode using `tsx watch` |
 | `npm run build` | Compiles TypeScript source to production JavaScript in `dist/` |
 | `npm start` | Runs the compiled server from `dist/server.js` |
+| `npm test` | Runs the full Jest test suite with in-memory MongoDB |
 | `npm run typecheck` | Validates TypeScript types across the project (`tsc --noEmit`) |
 | `npm run seed` | Seeds/upserts the predefined problems into MongoDB |
+
+---
+
+## Production Deployment
+
+### 1. Build and Run Directly with Node.js
+```bash
+# 1. Install dependencies
+npm ci
+
+# 2. Build the TypeScript source to dist/
+npm run build
+
+# 3. Start the production server
+npm start
+```
+
+### 2. Running with a Process Manager (e.g. PM2)
+```bash
+# Install PM2 globally if needed
+npm install -g pm2
+
+# Build and start the cluster
+npm run build
+pm2 start dist/server.js --name "lld-backend" -i max
+```
 
 ---
 
@@ -470,8 +497,13 @@ The server will be running on `http://localhost:5000`.
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `PORT` | No | `5000` | Port for the Express server |
-| `NODE_ENV` | No | `development` | Environment mode (`development` / `production`) |
+| `NODE_ENV` | No | `development` | Environment mode (`development` / `production` / `test`) |
 | `MONGO_URI` | Yes | `mongodb://127.0.0.1:27017/lld_assignment` | MongoDB connection URI |
-| `CORS_ORIGIN` | No | `*` | Allowed CORS origins |
+| `CORS_ORIGIN` | No | `*` | Allowed CORS origin(s), comma-separated in production |
+| `RATE_LIMIT_WINDOW_MS` | No | `900000` | Rate limiting window in milliseconds (15 mins) |
+| `RATE_LIMIT_MAX` | No | `300` | Max requests allowed per window per IP |
+| `GEMINI_API_KEY` | Optional | `""` | Free Google Gemini API key from AI Studio |
+| `GEMINI_MODEL` | No | `gemini-3.6-flash` | Gemini model version |
 | `ANTHROPIC_API_KEY` | Optional | `""` | Anthropic API key (fallback activates if omitted) |
 | `ANTHROPIC_MODEL` | No | `claude-sonnet-5` | Anthropic model version to use |
+

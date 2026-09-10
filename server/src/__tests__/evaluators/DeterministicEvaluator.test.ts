@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import { DeterministicEvaluator } from "../../evaluators/DeterministicEvaluator";
 import { Problem, Submission } from "../../types";
 

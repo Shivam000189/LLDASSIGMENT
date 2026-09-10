@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import { FeedbackAssembler } from "../../services/FeedbackAssembler";
 import { DeterministicEvaluator } from "../../evaluators/DeterministicEvaluator";
 import { LLMEvaluator } from "../../evaluators/LLMEvaluator";
