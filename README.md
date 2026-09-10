@@ -1,44 +1,153 @@
-# Low-Level Design (LLD) Practice Platform — Backend
+# Low-Level Design (LLD) Practice Platform
 
-A modern, robust backend service for practicing and evaluating Object-Oriented Low-Level Design (LLD) problems in TypeScript. Built with **Node.js, Express, TypeScript, and MongoDB (Mongoose)** with integration for deterministic static analysis and AI-assisted qualitative evaluation (Anthropic Claude).
+An automated, full-stack platform for practicing, evaluating, and mastering Object-Oriented Low-Level Design (LLD) in TypeScript. Built with **React 19, TypeScript, Express, MongoDB, Google Gemini, and Anthropic Claude**.
 
 ---
 
-## Table of Contents
+## 🌐 Live Deployments
+
+- **Frontend Application (Vercel)**: [https://llm-nu-six.vercel.app/](https://llm-nu-six.vercel.app/)
+- **Backend API Server (Render)**: [https://lldassigment.onrender.com/](https://lldassigment.onrender.com/)
+- **API Health Check**: [https://lldassigment.onrender.com/api/health](https://lldassigment.onrender.com/api/health)
+
+---
+
+## 📑 Table of Contents
 - [Overview](#overview)
-- [Architecture & Design Principles](#architecture--design-principles)
-- [Core End-to-End Flow](#core-end-to-end-flow)
+- [Screenshots & Demo](#screenshots--demo)
+- [Core Features](#core-features)
+- [Technology Stack](#technology-stack)
+- [System Architecture & Design Patterns](#system-architecture--design-patterns)
+- [Evaluation Engine](#evaluation-engine)
 - [Project Directory Structure](#project-directory-structure)
-- [Data Models & Schema](#data-models--schema)
-- [Evaluation Strategy](#evaluation-strategy)
-- [API Reference](#api-reference)
-- [Getting Started](#getting-started)
-- [Scripts Reference](#scripts-reference)
+- [Local Development & Setup](#local-development--setup)
+- [Running Tests](#running-tests)
+- [Production Deployment](#production-deployment)
 - [Environment Variables](#environment-variables)
+- [API Reference](#api-reference)
 
 ---
 
 ## Overview
 
-Unlike algorithmic platforms (e.g. LeetCode) where correctness is binary, Low-Level Design requires evaluating design trade-offs across multiple qualitative and structural dimensions:
-- **Class decomposition & Single Responsibility Principle (SRP)**
-- **Coupling & Cohesion**
-- **Abstraction & Interface usage**
-- **Extensibility & Open/Closed Principle**
-- **Naming conventions & Domain entity coverage**
+Unlike algorithmic coding platforms (e.g. LeetCode) where evaluation is a binary pass/fail based on input/output test cases, **Object-Oriented Low-Level Design requires evaluating structural architecture and qualitative design trade-offs**:
 
-This platform provides an automated **Submit → Non-blocking Evaluation → Actionable Feedback → Retry** practice loop.
+- **Decomposition & Single Responsibility Principle (SRP)**
+- **Coupling, Cohesion & Abstraction Quality**
+- **Extensibility & Open/Closed Principle (OCP)**
+- **Domain Modeling, State Representation & Entity Coverage**
+- **Readability & Idiomatic Naming Conventions**
+
+This platform provides an automated **Submit → Non-Blocking Evaluation → Multi-Dimensional Feedback → Iterate** learning loop with real-time structural analysis and LLM-assisted design critiques.
 
 ---
 
-## Architecture & Design Principles
+## Screenshots & Demo
+
+> *Add application screenshots below to showcase the user experience:*
+
+### 1. Problem Catalog
+*Browse through curated LLD challenges with requirement teasers and difficulty indicators.*
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│                   [ Screenshot: Problem Catalog Page ]                  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### 2. Problem Detail & Code Workspace
+*Review comprehensive requirements and constraints alongside a monospaced TypeScript code editor.*
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│             [ Screenshot: Problem Detail & Code Workspace ]             │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### 3. Real-Time Feedback & Multi-Dimensional Scores
+*Instant deterministic checks combined with qualitative AI design critique.*
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│                  [ Screenshot: Detailed Feedback View ]                 │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### 4. Attempt History & Progression
+*Track score trends across deterministic and AI dimensions over time.*
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│                 [ Screenshot: Attempt History Dashboard ]               │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Core Features
+
+- **Dual-Strategy Evaluation Engine**:
+  - **Deterministic Static Analyzer**: Instant regex-based analysis checking class hierarchy, expected domain entity coverage, enum state representations, and separation of concerns.
+  - **Qualitative AI Evaluator**: Leverages Google Gemini 3.6 / Anthropic Claude for deep analysis of SRP, coupling, extensibility, and naming conventions.
+- **Fault-Tolerant Resilience (`Promise.allSettled`)**:
+  - If AI APIs encounter rate limits or network issues, the platform seamlessly activates a rule-based fallback without crashing or blocking the learner.
+- **Non-Blocking Fire-and-Forget Evaluation**:
+  - Submissions immediately return `202 Accepted` with status `"evaluating"`. The client polls until completion, preventing long-lived hanging connections.
+- **Zero-Config Database Auto-Seeding**:
+  - Backend automatically detects empty database collections on startup and seeds standard LLD problems (Parking Lot, Vending Machine).
+- **Persistent Attempt History**:
+  - Learner attempts are automatically tracked in local storage and MongoDB, enabling side-by-side score comparisons.
+- **Production-Hardened Security**:
+  - Helmet security headers, rate limiting (DDoS protection), payload size boundaries (`1mb`), response compression (gzip), and dynamic CORS for Vercel subdomains.
+
+---
+
+## Technology Stack
+
+### Frontend
+- **Framework**: React 19 + TypeScript
+- **Build Tool**: Vite 8 (with manual vendor chunk splitting)
+- **Styling**: TailwindCSS v4
+- **Routing**: React Router v7 (SPA with Vercel & Netlify rewrite fallbacks)
+- **Icons**: Lucide React / SVG Design System
+
+### Backend
+- **Runtime**: Node.js v20+ / TypeScript
+- **Framework**: Express 4
+- **Database & ODM**: MongoDB with Mongoose 8
+- **AI Integrations**:
+  - `@google/genai` (Google Gemini 3.6 Flash)
+  - `@anthropic-ai/sdk` (Claude 3.5 / Sonnet)
+- **Security & Performance**:
+  - `helmet` (HTTP security headers)
+  - `express-rate-limit` (API rate limiting)
+  - `compression` (Gzip/Deflate compression)
+  - `cors` (Dynamic origin matching)
+
+### Testing & Quality
+- **Test Runner**: Jest + `ts-jest`
+- **Integration Testing**: Supertest + `mongodb-memory-server`
+- **Static Analysis**: TypeScript (`tsc --noEmit`)
+
+---
+
+## System Architecture & Design Patterns
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                             Client / Frontend                               │
+│                             React 19 Frontend                               │
+│                         (https://llm-nu-six.vercel.app)                     │
 └───────────────┬─────────────────────────────────────────────▲───────────────┘
   1. POST Code  │                                             │ 4. Poll Status
- (202 Accepted) │                                             │ (GET /attempts/:id)
+ (202 Accepted) │                                             │ (GET /api/attempts/:id)
                 ▼                                             │
 ┌───────────────────────────────┐                             │
 │       Express API Router      │                             │
@@ -74,436 +183,258 @@ This platform provides an automated **Submit → Non-blocking Evaluation → Act
 └───────────────────────────────┘
 ```
 
-1. **Strategy Pattern for Evaluators**: All evaluation components implement a common `Evaluator` interface:
-   ```typescript
-   export interface Evaluator {
-     evaluate(submission: Submission, problem: Problem): Promise<EvaluationResult>;
-   }
-   ```
-2. **Independent Failure Isolation**: `FeedbackAssembler` uses `Promise.allSettled()` to evaluate both static structural checks and LLM qualitative critique in parallel. If the LLM call fails or times out, the system automatically falls back to deterministic-only feedback with clear fallback messaging.
-3. **Non-blocking Asynchronous Polling Model**: `POST /api/attempts` immediately validates inputs, creates a database record with `status: "evaluating"`, and returns `202 Accepted`. Evaluation continues in the background, allowing clients to poll `GET /api/attempts/:id` without long-hanging HTTP connections.
-4. **Embedded Subdocument Design**: `Submission` and `Feedback` are stored as embedded subdocuments inside `Attempt` documents because they are always queried and displayed together with their parent attempt.
+### Key Architectural Patterns
+1. **Strategy Pattern**: Both `DeterministicEvaluator` and `LLMEvaluator` implement a shared `Evaluator` interface, making it trivial to plug in AST parsers, linter rules, or other LLM providers.
+2. **Failure Isolation**: `FeedbackAssembler` wraps evaluators in `Promise.allSettled()`. Evaluator crashes or timeouts never cascade into server errors.
+3. **Embedded Subdocument Design**: Submissions and feedback are persisted directly within `Attempt` documents for atomic writes and single-query reads.
+
+---
+
+## Evaluation Engine
+
+### 1. Deterministic Static Checks (`DeterministicEvaluator`)
+| Dimension | Score Range | Description |
+|---|---|---|
+| `structurePresent` | `0` or `1` | Verifies presence of `class` or `interface` declarations |
+| `entityCoverage` | `0.0` - `1.0` | Identifies coverage of problem's expected domain entities with found/missing lists |
+| `statePresent` | `0` or `1` | Checks for `enum` definitions representing domain states |
+| `responsibilitySpread` | `0.0` - `1.0` | Scores separation of concerns across multiple class abstractions |
+
+### 2. Qualitative AI Checks (`LLMEvaluator`)
+| Dimension | Score Range | Description |
+|---|---|---|
+| `srp` | `0.0` - `1.0` | Single Responsibility Principle adherence & critique |
+| `coupling` | `0.0` - `1.0` | Coupling, cohesion, and abstraction depth |
+| `extensibility` | `0.0` - `1.0` | Open/Closed Principle compliance (ease of adding new strategies/handlers) |
+| `naming` | `0.0` - `1.0` | Domain-appropriate terminology and clarity |
 
 ---
 
 ## Project Directory Structure
 
 ```
-server/
-├── package.json               # Dependencies and scripts (dev, build, seed, typecheck)
-├── tsconfig.json              # Strict ES2022 TypeScript configuration
-├── .env                       # Local environment secrets & config
-├── .env.example               # Example configuration template
-├── .gitignore
-└── src/
-    ├── types.ts               # Core shared domain types & interfaces
-    ├── app.ts                 # Express application setup, middleware, and route mounting
-    ├── server.ts              # Database connection bootstrap and HTTP server listener
-    │
-    ├── config/
-    │   ├── env.ts             # Strongly-typed environment variables
-    │   └── db.ts              # MongoDB Mongoose connection and event listeners
-    │
-    ├── models/
-    │   ├── Problem.ts         # Problem Mongoose model
-    │   ├── Attempt.ts         # Attempt Mongoose model (embedded subdocuments)
-    │   └── index.ts           # Model exports
-    │
-    ├── evaluators/
-    │   ├── Evaluator.ts       # Evaluator interface contract
-    │   ├── DeterministicEvaluator.ts # Static regex-based structural analysis
-    │   ├── LLMEvaluator.ts    # Anthropic API qualitative evaluator with 1 retry
-    │   └── index.ts           # Evaluator exports
-    │
-    ├── services/
-    │   ├── FeedbackAssembler.ts # Independent evaluation assembly via Promise.allSettled
-    │   ├── AttemptService.ts  # Attempt creation, async evaluation, and history queries
-    │   └── index.ts           # Service exports
-    │
-    ├── routes/
-    │   ├── health.ts          # GET /api/health (System and DB status)
-    │   ├── problems.ts        # GET /api/problems, GET /api/problems/:id
-    │   ├── attempts.ts        # POST /api/attempts, GET /api/attempts/:id, GET /api/attempts
-    │   └── index.ts           # Root API router
-    │
-    ├── seed/
-    │   ├── problems.ts        # Seed data for "Parking Lot" and "Vending Machine"
-    │   ├── run.ts             # Idempotent upsert seeding script
-    │   └── index.ts           # Seed exports
-    │
-    └── middlewares/
-        ├── errorHandler.ts    # Centralized global error handling middleware
-        └── notFound.ts        # 404 Route Not Found middleware
+.
+├── client/                     # React 19 Frontend
+│   ├── src/
+│   │   ├── api/client.ts       # Typed API client with baseUrl sanitization
+│   │   ├── components/         # Shared Nav, ErrorBoundary, LoadingState, ErrorState
+│   │   ├── pages/              # ProblemList, ProblemDetail, AttemptResult, AttemptHistory
+│   │   ├── lib/learner.ts      # Anonymous learner ID management
+│   │   ├── types.ts            # Shared TypeScript domain interfaces
+│   │   └── main.tsx            # Application entrypoint & Router setup
+│   ├── vercel.json             # Vercel SPA routing rewrite configuration
+│   ├── vite.config.ts          # Vite configuration with vendor chunk splitting
+│   └── package.json
+│
+├── server/                     # Node.js + Express Backend
+│   ├── src/
+│   │   ├── config/             # Environment, Database & Dynamic CORS configuration
+│   │   ├── evaluators/         # Evaluator Strategy (Deterministic & LLM Evaluators)
+│   │   ├── middlewares/        # Centralized ErrorHandler & 404 handler
+│   │   ├── models/             # Problem and Attempt Mongoose schemas
+│   │   ├── routes/             # Health, Problems, and Attempts API routes
+│   │   ├── seed/               # Problem definitions (Parking Lot, Vending Machine)
+│   │   ├── services/           # FeedbackAssembler & AttemptService lifecycle
+│   │   ├── __tests__/          # Unit and integration test suites
+│   │   ├── app.ts              # Express application configuration
+│   │   └── server.ts           # HTTP server startup & graceful shutdown
+│   ├── jest.config.js          # Jest configuration for TypeScript
+│   ├── tsconfig.json           # Development & test TypeScript config
+│   ├── tsconfig.build.json     # Production build config (excludes tests)
+│   └── package.json
+│
+└── README.md
 ```
 
 ---
 
-## Data Models & Schema
-
-### 1. `Problem`
-Represents an LLD practice problem stored in MongoDB's `problems` collection:
-- `_id` (`String`): Problem ID (e.g. `"parking-lot"`, `"vending-machine"`)
-- `title` (`String`): Problem title
-- `requirements` (`String[]`): List of functional requirements
-- `constraints` (`String[]`): Architectural and design constraints
-- `expectedEntities` (`String[]`): Core domain entities expected in the design (hidden from learners in API responses)
-
-### 2. `Attempt`
-Represents a learner's submission and evaluation lifecycle in the `attempts` collection:
-- `_id` (`ObjectId`): Unique attempt identifier
-- `problemId` (`String`): Reference to the problem
-- `learnerId` (`String`): Identifier for the user/learner
-- `status` (`"evaluating" | "completed" | "failed"`): Current lifecycle status
-- `submission` (Embedded Subdocument):
-  - `code` (`String`): Submitted TypeScript code
-  - `language` (`"TS"`): Fixed literal type
-  - `submittedAt` (`Date`): Timestamp
-- `feedback` (Embedded Subdocument, optional during evaluation):
-  - `deterministic` (`EvaluationResult`): Structural check dimensions
-  - `llm` (`EvaluationResult | null`): Qualitative LLM scores or null
-  - `usedFallback` (`Boolean`): Flag indicating if AI evaluation was unavailable
-  - `overallNotes` (`String`): Summary feedback note
-- `createdAt` / `updatedAt` (`Date`): Timestamps (indexed for descending history queries)
-
----
-
-## Evaluation Strategy
-
-### 1. Deterministic Evaluation (`DeterministicEvaluator`)
-Performs static checks on `submission.code`:
-- **`structurePresent`** (score: `0` or `1`): Verifies presence of `class` or `interface` keywords.
-- **`entityCoverage`** (score: `0.0` - `1.0`): Calculates fraction of `expectedEntities` identified in code with detailed found/missing lists.
-- **`statePresent`** (score: `0` or `1`): Checks for `enum` declarations for state/type modeling.
-- **`responsibilitySpread`** (score: `0.0` - `1.0`): Evaluates class count and decomposition (capped at 3+ classes).
-
-### 2. LLM Evaluation (`LLMEvaluator`)
-Interacts with the Anthropic Claude API (`@anthropic-ai/sdk`) using a strict JSON-only schema:
-- **`srp`**: Single Responsibility Principle score (`0.0` - `1.0`) & actionable critique.
-- **`coupling`**: Coupling, cohesion, and abstraction score & critique.
-- **`extensibility`**: Open/Closed principle & extension points score.
-- **`naming`**: Domain nomenclature and readability score.
-- **Resilience**: Retries once on API/parse failure before throwing to `FeedbackAssembler` to activate fallback.
-
----
-
-## API Reference
-
-### Health Check
-#### `GET /api/health`
-Returns the operational status of the server and database.
-
-**Response (`200 OK`):**
-```json
-{
-  "status": "ok",
-  "timestamp": "2026-09-10T08:30:00.000Z",
-  "uptime": 124.5,
-  "database": {
-    "provider": "mongodb",
-    "status": "connected",
-    "host": "127.0.0.1"
-  }
-}
-```
-
----
-
-### Problems API
-
-#### `GET /api/problems`
-List all seeded practice problems (omits internal `expectedEntities`).
-
-**Response (`200 OK`):**
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": "parking-lot",
-      "title": "Parking Lot",
-      "requirements": [
-        "Support multiple vehicle types...",
-        "Manage limited parking spots...",
-        "Issue parking tickets..."
-      ],
-      "constraints": [
-        "Clean separation of concerns..."
-      ],
-      "createdAt": "2026-09-10T08:00:00.000Z",
-      "updatedAt": "2026-09-10T08:00:00.000Z"
-    }
-  ]
-}
-```
-
-#### `GET /api/problems/:id`
-Get single problem details by ID (`parking-lot` or `vending-machine`).
-
----
-
-### Attempts API
-
-#### `POST /api/attempts`
-Submit a TypeScript solution for evaluation. Returns `202 Accepted` immediately with status `"evaluating"`.
-
-**Request Body:**
-```json
-{
-  "problemId": "parking-lot",
-  "learnerId": "learner-123",
-  "code": "export enum VehicleType { MOTORCYCLE, CAR } export class Vehicle { constructor(public type: VehicleType) {} } export class ParkingSpot {} export class Ticket {} export class ParkingLot {}"
-}
-```
-
-**Response (`202 Accepted`):**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "66dfd52a78f149b01a234567",
-    "problemId": "parking-lot",
-    "learnerId": "learner-123",
-    "status": "evaluating",
-    "submission": {
-      "code": "export enum VehicleType ...",
-      "language": "TS",
-      "submittedAt": "2026-09-10T08:35:00.000Z"
-    },
-    "createdAt": "2026-09-10T08:35:00.000Z",
-    "updatedAt": "2026-09-10T08:35:00.000Z"
-  }
-}
-```
-
----
-
-#### `GET /api/attempts/:id`
-Poll the attempt status and retrieve evaluation results.
-
-**Response when completed (`200 OK`):**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "66dfd52a78f149b01a234567",
-    "problemId": "parking-lot",
-    "learnerId": "learner-123",
-    "status": "completed",
-    "submission": {
-      "code": "export enum VehicleType ...",
-      "language": "TS",
-      "submittedAt": "2026-09-10T08:35:00.000Z"
-    },
-    "feedback": {
-      "deterministic": {
-        "source": "deterministic",
-        "dimensions": {
-          "structurePresent": {
-            "score": 1,
-            "explanation": "Found class or interface declarations in submission."
-          },
-          "entityCoverage": {
-            "score": 1,
-            "explanation": "Identified 4/4 expected entities. Found: [Vehicle, ParkingSpot, Ticket, ParkingLot]. Missing: []."
-          },
-          "statePresent": {
-            "score": 1,
-            "explanation": "Found enum definition(s) representing domain states/types."
-          },
-          "responsibilitySpread": {
-            "score": 1,
-            "explanation": "Identified 4 class definition(s) in the submitted code."
-          }
-        }
-      },
-      "llm": {
-        "source": "llm",
-        "dimensions": {
-          "srp": { "score": 0.85, "explanation": "Classes maintain focused responsibilities." },
-          "coupling": { "score": 0.8, "explanation": "Good cohesion between entities." },
-          "extensibility": { "score": 0.9, "explanation": "Pricing strategies can be added easily." },
-          "naming": { "score": 0.9, "explanation": "Clear and idiomatic domain names." }
-        }
-      },
-      "usedFallback": false,
-      "overallNotes": "Combined deterministic and AI-assisted feedback."
-    },
-    "createdAt": "2026-09-10T08:35:00.000Z",
-    "updatedAt": "2026-09-10T08:35:02.000Z"
-  }
-}
-```
-
----
-
-#### `GET /api/attempts?problemId=X&learnerId=Y`
-Retrieve all previous attempts for a learner on a given problem, sorted by `createdAt` descending.
-
-**Response (`200 OK`):**
-```json
-{
-  "success": true,
-  "count": 2,
-  "data": [
-    {
-      "id": "66dfd52a78f149b01a234568",
-      "problemId": "parking-lot",
-      "learnerId": "learner-123",
-      "status": "evaluating",
-      "submission": {
-        "code": "export class ParkingLot { /* revised design */ }",
-        "language": "TS",
-        "submittedAt": "2026-09-10T08:45:00.000Z"
-      },
-      "createdAt": "2026-09-10T08:45:00.000Z",
-      "updatedAt": "2026-09-10T08:45:00.000Z"
-    },
-    {
-      "id": "66dfd52a78f149b01a234567",
-      "problemId": "parking-lot",
-      "learnerId": "learner-123",
-      "status": "completed",
-      "submission": {
-        "code": "export class Vehicle {} export class ParkingLot {}",
-        "language": "TS",
-        "submittedAt": "2026-09-10T08:35:00.000Z"
-      },
-      "feedback": {
-        "deterministic": {
-          "source": "deterministic",
-          "dimensions": {
-            "structurePresent": {
-              "score": 1,
-              "explanation": "Found class or interface declarations in submission."
-            },
-            "entityCoverage": {
-              "score": 0.5,
-              "explanation": "Identified 2/4 expected entities. Found: [Vehicle, ParkingLot]. Missing: [ParkingSpot, Ticket]."
-            },
-            "statePresent": {
-              "score": 0,
-              "explanation": "No enum definitions found."
-            },
-            "responsibilitySpread": {
-              "score": 0.67,
-              "explanation": "Identified 2 class definition(s) in the submitted code."
-            }
-          }
-        },
-        "llm": {
-          "source": "llm",
-          "dimensions": {
-            "srp": { "score": 0.75, "explanation": "Basic class structure present but responsibilities are concentrated." },
-            "coupling": { "score": 0.7, "explanation": "Introduce abstractions for spot allocation and ticketing." },
-            "extensibility": { "score": 0.65, "explanation": "Consider Strategy pattern for fee calculations." },
-            "naming": { "score": 0.85, "explanation": "Domain names are clear and idiomatic." }
-          }
-        },
-        "usedFallback": false,
-        "overallNotes": "Combined deterministic and AI-assisted feedback."
-      },
-      "createdAt": "2026-09-10T08:35:00.000Z",
-      "updatedAt": "2026-09-10T08:35:02.000Z"
-    }
-  ]
-}
-```
-
----
-
-## Getting Started
+## Local Development & Setup
 
 ### Prerequisites
-- **Node.js** v18+ (tested on Node v22)
-- **MongoDB** running locally on port `27017` or a MongoDB Atlas URI
-
-### Installation & Run
-
-1. Navigate to the `server/` directory:
-   ```bash
-   cd server
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure environment variables in `.env`:
-   ```env
-   PORT=5000
-   NODE_ENV=development
-   MONGO_URI=mongodb://127.0.0.1:27017/lld_assignment
-   CORS_ORIGIN=*
-   ANTHROPIC_API_KEY=your_anthropic_api_key_here
-   ANTHROPIC_MODEL=claude-sonnet-5
-   ```
-
-4. Seed the database with predefined problems:
-   ```bash
-   npm run seed
-   ```
-
-5. Start the development server with hot-reloading:
-   ```bash
-   npm run dev
-   ```
-
-The server will be running on `http://localhost:5000`.
+- **Node.js** v20+
+- **MongoDB** running locally on `mongodb://127.0.0.1:27017` or a MongoDB Atlas URI
 
 ---
 
-## Scripts Reference
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Shivam000189/LLDASSIGMENT.git
+cd LLDASSIGMENT
+```
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Runs the server in development mode using `tsx watch` |
-| `npm run build` | Compiles TypeScript source to production JavaScript in `dist/` |
-| `npm start` | Runs the compiled server from `dist/server.js` |
-| `npm test` | Runs the full Jest test suite with in-memory MongoDB |
-| `npm run typecheck` | Validates TypeScript types across the project (`tsc --noEmit`) |
-| `npm run seed` | Seeds/upserts the predefined problems into MongoDB |
+---
+
+### 2. Backend Setup
+```bash
+cd server
+
+# Install dependencies
+npm install
+
+# Create local environment configuration
+cp .env.example .env
+```
+
+Configure your `server/.env` file:
+```env
+PORT=5000
+NODE_ENV=development
+MONGO_URI=mongodb://127.0.0.1:27017/lld_assignment
+CORS_ORIGIN=*
+
+# Free Google Gemini API Key (https://aistudio.google.com/app/apikey)
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-3.6-flash
+```
+
+Seed the database and start the backend:
+```bash
+# Seed initial problems (Parking Lot & Vending Machine)
+npm run seed
+
+# Start server in development mode (hot-reload)
+npm run dev
+```
+*Backend runs on `http://localhost:5000` (Health check at `http://localhost:5000/api/health`).*
+
+---
+
+### 3. Frontend Setup
+Open a new terminal window:
+```bash
+cd client
+
+# Install dependencies
+npm install
+
+# Create frontend environment configuration
+cp .env.example .env
+```
+
+Ensure `client/.env` points to the backend:
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+Start the frontend development server:
+```bash
+npm run dev
+```
+*Frontend runs on `http://localhost:5173`.*
+
+---
+
+## Running Tests
+
+The backend includes a full test suite powered by Jest and `mongodb-memory-server` (runs completely in-memory, requiring no external database or network calls):
+
+```bash
+cd server
+npm test
+```
+
+### Test Suite Breakdown:
+1. **`DeterministicEvaluator.test.ts`**: Verifies entity extraction, class counting, enum detection, empty inputs, and malformed code resilience.
+2. **`FeedbackAssembler.test.ts`**: Verifies dual evaluation combination, LLM error fallback behavior, and crash isolation via `Promise.allSettled`.
+3. **`attempts.test.ts`**: Integration tests testing the immediate `202 Accepted` response, input validation (400/404), and polling completion.
 
 ---
 
 ## Production Deployment
 
-### 1. Build and Run Directly with Node.js
+### Backend (e.g. Render / Railway / VPS / PM2)
 ```bash
-# 1. Install dependencies
+cd server
+
+# 1. Install production dependencies
 npm ci
 
-# 2. Build the TypeScript source to dist/
+# 2. Compile TypeScript to dist/
 npm run build
 
 # 3. Start the production server
 npm start
 ```
 
-### 2. Running with a Process Manager (e.g. PM2)
+*Or with PM2:*
 ```bash
-# Install PM2 globally if needed
-npm install -g pm2
-
-# Build and start the cluster
 npm run build
 pm2 start dist/server.js --name "lld-backend" -i max
+```
+
+### Frontend (e.g. Vercel / Netlify / Cloudflare Pages)
+```bash
+cd client
+
+# 1. Build optimized SPA assets
+npm run build
+
+# Output is generated in client/dist/
 ```
 
 ---
 
 ## Environment Variables
 
+### Backend (`server/.env`)
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `PORT` | No | `5000` | Port for the Express server |
 | `NODE_ENV` | No | `development` | Environment mode (`development` / `production` / `test`) |
 | `MONGO_URI` | Yes | `mongodb://127.0.0.1:27017/lld_assignment` | MongoDB connection URI |
 | `CORS_ORIGIN` | No | `*` | Allowed CORS origin(s), comma-separated in production |
-| `RATE_LIMIT_WINDOW_MS` | No | `900000` | Rate limiting window in milliseconds (15 mins) |
+| `RATE_LIMIT_WINDOW_MS` | No | `900000` | Rate limiting window (15 mins) |
 | `RATE_LIMIT_MAX` | No | `300` | Max requests allowed per window per IP |
-| `GEMINI_API_KEY` | Optional | `""` | Free Google Gemini API key from AI Studio |
+| `GEMINI_API_KEY` | Optional | `""` | Google Gemini API Key from Google AI Studio |
 | `GEMINI_MODEL` | No | `gemini-3.6-flash` | Gemini model version |
 | `ANTHROPIC_API_KEY` | Optional | `""` | Anthropic API key (fallback activates if omitted) |
-| `ANTHROPIC_MODEL` | No | `claude-sonnet-5` | Anthropic model version to use |
+| `ANTHROPIC_MODEL` | No | `claude-sonnet-5` | Anthropic model version |
 
+### Frontend (`client/.env`)
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `VITE_API_URL` | Yes | `http://localhost:5000/api` | Backend API base endpoint |
+
+---
+
+## API Reference
+
+### Health Check
+`GET /api/health`
+```json
+{
+  "status": "ok",
+  "environment": "production",
+  "uptimeSeconds": 360,
+  "database": {
+    "provider": "mongodb",
+    "status": "connected",
+    "connected": true
+  },
+  "memory": {
+    "rssMb": "42.15",
+    "heapUsedMb": "23.40"
+  }
+}
+```
+
+### Problems
+- `GET /api/problems` — List all practice problems.
+- `GET /api/problems/:id` — Get specific problem description, requirements, and constraints.
+
+### Attempts
+- `POST /api/attempts` — Submit solution for async evaluation (Returns `202 Accepted`).
+  ```json
+  {
+    "problemId": "parking-lot",
+    "learnerId": "learner_123",
+    "code": "export class Vehicle {} export class ParkingLot {}"
+  }
+  ```
+- `GET /api/attempts/:id` — Retrieve attempt status (`evaluating`, `completed`, `failed`) and feedback.
+- `GET /api/attempts?problemId=parking-lot&learnerId=learner_123` — Query past attempt history sorted by date descending.
+
+---
+
+## 📄 License
+ISC License © 2026 Shivam.
