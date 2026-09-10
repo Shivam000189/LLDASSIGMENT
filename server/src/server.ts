@@ -8,27 +8,23 @@ import { problems } from "./seed/problems";
 
 let server: http.Server | null = null;
 
-// Ensure initial problems are seeded in production if collection is empty
+// Ensure all seed problems exist in the database on startup
 const ensureProblemsSeeded = async (): Promise<void> => {
   try {
-    const count = await ProblemModel.countDocuments();
-    if (count === 0) {
-      console.log("[AutoSeed] Problems collection is empty. Auto-seeding initial problems...");
-      for (const problem of problems) {
-        await ProblemModel.findOneAndUpdate(
-          { _id: problem.id },
-          {
-            _id: problem.id,
-            title: problem.title,
-            requirements: problem.requirements,
-            constraints: problem.constraints,
-            expectedEntities: problem.expectedEntities,
-          },
-          { upsert: true, new: true, setDefaultsOnInsert: true }
-        );
-      }
-      console.log(`[AutoSeed] Seeded ${problems.length} default problems.`);
+    for (const problem of problems) {
+      await ProblemModel.findOneAndUpdate(
+        { _id: problem.id },
+        {
+          _id: problem.id,
+          title: problem.title,
+          requirements: problem.requirements,
+          constraints: problem.constraints,
+          expectedEntities: problem.expectedEntities,
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
     }
+    console.log(`[AutoSeed] Ensured ${problems.length} default problems are seeded.`);
   } catch (err) {
     console.warn("[AutoSeed] Problem auto-seed skipped or failed:", err);
   }

@@ -700,4 +700,112 @@ export const LLD_CODE_SAMPLES: CodeSample[] = [
       },
     ],
   },
+  {
+    id: "elevator-system",
+    filename: "ElevatorController.ts",
+    problemTitle: "Elevator System",
+    difficulty: "Medium",
+    pattern: "State + Strategy Pattern",
+    description: "Multi-car elevator scheduling system managing floor pickup requests, motion states, and dispatch algorithms.",
+    testCasesCount: 5,
+    testCases: [
+      { name: "Direction-Aware Floor Request Queuing", status: "passed", time: "0.8ms" },
+      { name: "Nearest Elevator Dispatch Strategy", status: "passed", time: "1.2ms" },
+      { name: "Elevator Door State Transitions (Open/Close)", status: "passed", time: "0.5ms" },
+      { name: "Weight & Passenger Capacity Enforcement", status: "passed", time: "0.9ms" },
+      { name: "Floor Arrival Event Dispatcher", status: "passed", time: "0.4ms" },
+    ],
+    lines: [
+      {
+        num: 1,
+        tokens: [
+          { text: "// LLSOLVE - Multi-Car Elevator Control Architecture", type: "comment" },
+        ],
+      },
+      {
+        num: 2,
+        tokens: [
+          { text: "export enum ", type: "keyword" },
+          { text: "Direction ", type: "type" },
+          { text: "{ ", type: "punctuation" },
+          { text: "UP = 'UP', DOWN = 'DOWN', IDLE = 'IDLE' ", type: "string" },
+          { text: "}\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 3,
+        tokens: [
+          { text: "export enum ", type: "keyword" },
+          { text: "DoorState ", type: "type" },
+          { text: "{ ", type: "punctuation" },
+          { text: "OPEN = 'OPEN', CLOSED = 'CLOSED' ", type: "string" },
+          { text: "}\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 4,
+        tokens: [
+          { text: "export interface ", type: "keyword" },
+          { text: "DispatchStrategy ", type: "type" },
+          { text: "{\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 5,
+        tokens: [
+          { text: "  selectElevator(elevators: Elevator[], request: Request): Elevator;\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 6,
+        tokens: [
+          { text: "}\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 7,
+        tokens: [
+          { text: "export class ", type: "keyword" },
+          { text: "ElevatorController ", type: "type" },
+          { text: "{\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 8,
+        tokens: [
+          { text: "  constructor(private elevators: Elevator[], private strategy: DispatchStrategy) {}\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 9,
+        tokens: [
+          { text: "  public handleRequest(request: Request): void {\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 10,
+        tokens: [
+          { text: "    const elevator = this.strategy.selectElevator(this.elevators, request);\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 11,
+        tokens: [
+          { text: "    elevator.enqueueFloor(request.destinationFloor);\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 12,
+        tokens: [
+          { text: "  }\n", type: "punctuation" },
+        ],
+      },
+      {
+        num: 13,
+        tokens: [
+          { text: "}\n", type: "punctuation" },
+        ],
+      },
+    ],
+  },
 ];

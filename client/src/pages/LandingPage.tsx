@@ -380,7 +380,7 @@ export const LandingPage: React.FC = () => {
                       Ready to write your own solution?
                     </span>
                     <Link
-                      to={`/problems/${currentSample.id === "parking-lot" ? "parking-lot" : "vending-machine"}`}
+                      to={`/problems/${currentSample.id}`}
                       className="inline-flex items-center gap-1 px-3 py-1 rounded bg-white hover:bg-neutral-200 text-black font-bold text-xs transition"
                     >
                       <span>Open in Sandbox</span>
@@ -481,23 +481,23 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Problem Card 3: Token Bucket Rate Limiter */}
+          {/* Problem Card 3: Elevator System */}
           <div className="bg-[#0d0d12] rounded-2xl p-6 border border-white/15 hover:border-white/40 shadow-lg transition-all duration-300 flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-white text-black">
-                  Hard
+                  Medium
                 </span>
-                <span className="text-xs text-neutral-400 font-mono">Token Bucket</span>
+                <span className="text-xs text-neutral-400 font-mono">State + Strategy</span>
               </div>
               <h3 className="text-xl font-bold text-white group-hover:text-neutral-200 transition">
-                Distributed Rate Limiter
+                Elevator System
               </h3>
               <p className="mt-2 text-sm text-neutral-400 leading-relaxed">
-                Implement a concurrency-safe rate limiter handling sudden burst traffic with precision refill algorithms and per-tenant partitioning.
+                Coordinate multiple elevators servicing multiple floors with direction-aware request queuing, door states, and dispatching strategies.
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
-                {["TokenBucket", "LeakyBucket", "RateLimiterStrategy"].map((e) => (
+                {["Elevator", "ElevatorController", "Request", "Floor"].map((e) => (
                   <span key={e} className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#16161f] text-neutral-300 border border-white/10">
                     {e}
                   </span>
@@ -505,12 +505,12 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
             <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs font-semibold text-white">4 Test Suites</span>
+              <span className="text-xs font-semibold text-white">5 Test Suites</span>
               <Link
-                to="/problems"
+                to="/problems/elevator-system"
                 className="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-white hover:bg-neutral-200 text-black text-xs font-bold transition shadow-xs"
               >
-                Explore Problem &rarr;
+                Solve Problem &rarr;
               </Link>
             </div>
           </div>
