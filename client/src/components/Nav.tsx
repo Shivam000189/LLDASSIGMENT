@@ -1,29 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { getLearnerId } from "../lib/learner";
 
 export const Nav: React.FC = () => {
   const learnerId = getLearnerId();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(learnerId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <header className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-white/10 transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+        
+        {/* Site Name (No logo icon, just clean name in white) */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-base font-bold text-gray-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+          className="text-2xl font-black tracking-tight text-white hover:opacity-90 transition focus:outline-none flex items-center gap-1"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 text-white font-bold text-xs">
-            LLD
-          </span>
-          <span>LLD Practice Platform</span>
+          <span>LLSOLVE</span>
         </Link>
 
-        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-          <span>Learner ID:</span>
-          <span className="font-mono px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
-            {learnerId}
-          </span>
+        {/* User ID on the right */}
+        <div className="flex items-center">
+          <button
+            onClick={handleCopyId}
+            title="Click to copy Learner ID"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-[#111115] text-white/90 border border-white/20 hover:border-white/40 hover:bg-[#1a1a20] transition-colors shadow-xs cursor-pointer"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span className="text-white/50">Learner ID:</span>
+            <span className="text-white font-semibold">{learnerId.slice(0, 12)}...</span>
+            <span className="text-[11px] text-white/80 font-sans ml-1">
+              {copied ? "✓ Copied" : "📋"}
+            </span>
+          </button>
         </div>
+
       </div>
     </header>
   );

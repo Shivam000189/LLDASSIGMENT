@@ -11,7 +11,7 @@ export type AttemptStatus = "evaluating" | "completed" | "failed";
 
 export interface Submission {
   code: string;
-  language: "TS";
+  language: "TS" | "PY";
   submittedAt: string;
 }
 

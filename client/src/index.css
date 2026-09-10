@@ -1,1 +1,101 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-black: #000000;
+    --bg-card: #0d0d12;
+    --bg-card-hover: #16161f;
+    --text-white: #ffffff;
+    --text-muted: #94a3b8;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+  }
+}
+
+/* Custom Keyframe Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes pulseWhite {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes blinkCursor {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 4.5s ease-in-out infinite;
+}
+
+.animate-pulse-white {
+  animation: pulseWhite 2s infinite;
+}
+
+.animate-cursor-blink {
+  animation: blinkCursor 0.9s infinite;
+}
+
+/* Code Syntax Color Palette for Pitch Black Theme */
+.token-keyword { color: #f472b6; font-weight: 600; }
+.token-type { color: #60a5fa; font-weight: 500; }
+.token-function { color: #38bdf8; }
+.token-string { color: #4ade80; }
+.token-variable { color: #e2e8f0; }
+.token-number { color: #fbbf24; }
+.token-comment { color: #64748b; font-style: italic; }
+.token-operator { color: #94a3b8; }
+.token-punctuation { color: #cbd5e1; }
+.token-property { color: #a78bfa; }
+.token-decorator { color: #f472b6; }
+
+/* Custom Scrollbar for IDE */
+.custom-code-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-code-scroll::-webkit-scrollbar-track {
+  background: #08080c;
+}
+.custom-code-scroll::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+.custom-code-scroll::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}

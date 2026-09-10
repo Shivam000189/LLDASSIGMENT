@@ -165,8 +165,17 @@ export class LLMEvaluator implements Evaluator {
   }
 
   private buildPrompt(submission: Submission, problem: Problem): string {
+    const isPython = submission.language === "PY";
+    const langName = isPython ? "Python" : "TypeScript";
+    const codeBlockLang = isPython ? "python" : "typescript";
+    const languageGuidelines = isPython
+      ? "You are reviewing a Python (PY) submission. Judge language-appropriate design patterns and Pythonic OOP principles (e.g. classes, ABCs/Protocols, typing, dataclasses, composition, polymorphism). Do NOT penalize Python code for lacking TypeScript-specific constructs like 'interface' keywords."
+      : "You are reviewing a TypeScript (TS) submission. Judge language-appropriate design patterns and TypeScript OOP principles (e.g. interfaces, abstract classes, access modifiers, type safety).";
+
     return `
-Evaluate the following TypeScript Low-Level Design (LLD) submission for the problem "${problem.title}".
+Evaluate the following ${langName} Low-Level Design (LLD) submission for the problem "${problem.title}".
+
+${languageGuidelines}
 
 Problem Requirements:
 ${problem.requirements.map((r, i) => `${i + 1}. ${r}`).join("\n")}
@@ -174,8 +183,8 @@ ${problem.requirements.map((r, i) => `${i + 1}. ${r}`).join("\n")}
 Problem Constraints:
 ${problem.constraints.map((c, i) => `- ${c}`).join("\n")}
 
-Submitted TypeScript Code:
-\`\`\`typescript
+Submitted ${langName} Code:
+\`\`\`${codeBlockLang}
 ${submission.code}
 \`\`\`
 

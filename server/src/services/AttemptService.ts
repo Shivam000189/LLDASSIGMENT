@@ -6,11 +6,12 @@ export class AttemptService {
   public async createPending(
     problemId: string,
     learnerId: string,
-    code: string
+    code: string,
+    language: "TS" | "PY" = "TS"
   ): Promise<IAttemptDocument> {
     const submission: Submission = {
       code,
-      language: "TS",
+      language,
       submittedAt: new Date(),
     };
 

@@ -18,7 +18,7 @@ export const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 flex flex-col">
+        <div className="min-h-screen bg-black text-white flex flex-col antialiased">
           <Nav />
           <main className="flex-1">
             <Routes>

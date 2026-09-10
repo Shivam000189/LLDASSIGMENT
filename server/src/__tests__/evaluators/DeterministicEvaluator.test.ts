@@ -22,7 +22,7 @@ describe("DeterministicEvaluator", () => {
     evaluator = new DeterministicEvaluator();
   });
 
-  it("returns high scores for well-structured code", async () => {
+  it("returns high scores for well-structured TypeScript code", async () => {
     const wellStructuredCode = `
       export enum VehicleType {
         CAR,
@@ -58,10 +58,85 @@ describe("DeterministicEvaluator", () => {
 
     expect(result.source).toBe("deterministic");
     expect(result.dimensions.structurePresent.score).toBe(1);
+    expect(result.dimensions.structurePresent.explanation).toContain("Found class or interface declarations");
     expect(result.dimensions.entityCoverage.score).toBe(1);
     expect(result.dimensions.statePresent.score).toBe(1);
     expect(result.dimensions.responsibilitySpread.score).toBe(1);
     expect(result.dimensions.entityCoverage.explanation).toContain("Identified 4/4 expected entities");
+  });
+
+  it("returns high scores for well-structured Python code", async () => {
+    const pythonCode = `
+from enum import Enum
+from datetime import datetime
+
+class VehicleType(Enum):
+    CAR = 1
+    MOTORCYCLE = 2
+    TRUCK = 3
+
+class Vehicle:
+    def __init__(self, license_plate: str, vehicle_type: VehicleType):
+        self.license_plate = license_plate
+        self.vehicle_type = vehicle_type
+
+class ParkingSpot:
+    def __init__(self, spot_id: str):
+        self.spot_id = spot_id
+        self.is_occupied = False
+
+class Ticket:
+    def __init__(self, ticket_id: str, spot_id: str):
+        self.ticket_id = ticket_id
+        self.spot_id = spot_id
+        self.entry_time = datetime.now()
+
+class ParkingLot:
+    def __init__(self):
+        self.spots = []
+
+    def park_vehicle(self, vehicle: Vehicle) -> Ticket:
+        pass
+    `;
+
+    const submission: Submission = {
+      code: pythonCode,
+      language: "PY",
+      submittedAt: new Date(),
+    };
+
+    const result = await evaluator.evaluate(submission, parkingLotProblem);
+
+    expect(result.source).toBe("deterministic");
+    expect(result.dimensions.structurePresent.score).toBe(1);
+    expect(result.dimensions.structurePresent.explanation).toContain("Found class declaration(s)");
+    expect(result.dimensions.entityCoverage.score).toBe(1);
+    expect(result.dimensions.statePresent.score).toBe(1);
+    expect(result.dimensions.statePresent.explanation).toContain("Found Enum class definition or enum import");
+    expect(result.dimensions.responsibilitySpread.score).toBe(1);
+  });
+
+  it("returns 0 for statePresent on Python code without Enum", async () => {
+    const pythonNoEnum = `
+class Vehicle:
+    def __init__(self, license_plate: str):
+        self.license_plate = license_plate
+
+class ParkingSpot:
+    def __init__(self, spot_id: str):
+        self.spot_id = spot_id
+    `;
+
+    const submission: Submission = {
+      code: pythonNoEnum,
+      language: "PY",
+      submittedAt: new Date(),
+    };
+
+    const result = await evaluator.evaluate(submission, parkingLotProblem);
+
+    expect(result.dimensions.statePresent.score).toBe(0);
+    expect(result.dimensions.statePresent.explanation).toBe("No Enum definitions or enum imports found.");
   });
 
   it("returns partial entityCoverage when some entities are missing", async () => {
@@ -91,7 +166,7 @@ describe("DeterministicEvaluator", () => {
     expect(result.dimensions.entityCoverage.explanation).toContain("Found: [Vehicle, ParkingSpot]");
   });
 
-  it("returns 0 for statePresent when no enum exists", async () => {
+  it("returns 0 for statePresent when no enum exists in TS", async () => {
     const noEnumCode = `
       export class Vehicle {
         constructor(public plate: string) {}

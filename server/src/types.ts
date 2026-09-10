@@ -14,7 +14,7 @@ export interface Problem {
 
 export interface Submission {
   code: string;
-  language: "TS";
+  language: "TS" | "PY";
   submittedAt: Date;
 }
 

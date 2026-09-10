@@ -60,12 +60,13 @@ describe("POST and GET /api/attempts route", () => {
     llmSpy.mockRestore();
   });
 
-  it("returns 202 immediately with status evaluating", async () => {
+  it("returns 202 immediately with status evaluating for TS submission", async () => {
     const res = await request(app)
       .post("/api/attempts")
       .send({
         problemId: "parking-lot",
         learnerId: "learner-test-1",
+        language: "TS",
         code: `
           export enum VehicleType { CAR }
           export class Vehicle { constructor(public type: VehicleType) {} }
@@ -81,6 +82,68 @@ describe("POST and GET /api/attempts route", () => {
     expect(res.body.data.status).toBe("evaluating");
     expect(res.body.data.problemId).toBe("parking-lot");
     expect(res.body.data.learnerId).toBe("learner-test-1");
+    expect(res.body.data.submission.language).toBe("TS");
+  });
+
+  it("returns 202 immediately for PY submission", async () => {
+    const res = await request(app)
+      .post("/api/attempts")
+      .send({
+        problemId: "parking-lot",
+        learnerId: "learner-test-py",
+        language: "PY",
+        code: `
+from enum import Enum
+
+class VehicleType(Enum):
+    CAR = 1
+
+class Vehicle:
+    pass
+
+class ParkingSpot:
+    pass
+
+class Ticket:
+    pass
+
+class ParkingLot:
+    pass
+        `,
+      });
+
+    expect(res.status).toBe(202);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.submission.language).toBe("PY");
+  });
+
+  it("rejects missing language with 400", async () => {
+    const res = await request(app)
+      .post("/api/attempts")
+      .send({
+        problemId: "parking-lot",
+        learnerId: "learner-test-1",
+        code: "export class Test {}",
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toContain("language is required");
+  });
+
+  it("rejects invalid language with 400", async () => {
+    const res = await request(app)
+      .post("/api/attempts")
+      .send({
+        problemId: "parking-lot",
+        learnerId: "learner-test-1",
+        language: "JAVA",
+        code: "public class Test {}",
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toContain("language is required and must be either 'TS' or 'PY'");
   });
 
   it("rejects missing problemId with 400", async () => {
@@ -88,6 +151,7 @@ describe("POST and GET /api/attempts route", () => {
       .post("/api/attempts")
       .send({
         learnerId: "learner-test-1",
+        language: "TS",
         code: "export class Test {}",
       });
 
@@ -102,6 +166,7 @@ describe("POST and GET /api/attempts route", () => {
       .send({
         problemId: "parking-lot",
         learnerId: "learner-test-1",
+        language: "TS",
         code: "",
       });
 
@@ -116,6 +181,7 @@ describe("POST and GET /api/attempts route", () => {
       .send({
         problemId: "unknown-problem-id",
         learnerId: "learner-test-1",
+        language: "TS",
         code: "export class Test {}",
       });
 
@@ -130,6 +196,7 @@ describe("POST and GET /api/attempts route", () => {
       .send({
         problemId: "parking-lot",
         learnerId: "learner-test-1",
+        language: "TS",
         code: `
           export enum VehicleType { CAR }
           export class Vehicle { constructor(public type: VehicleType) {} }

@@ -47,11 +47,12 @@ export async function getProblem(id: string): Promise<Problem> {
 export async function createAttempt(
   problemId: string,
   learnerId: string,
-  code: string
+  code: string,
+  language: "TS" | "PY" = "TS"
 ): Promise<Attempt> {
   return request<Attempt>("/attempts", {
     method: "POST",
-    body: JSON.stringify({ problemId, learnerId, code }),
+    body: JSON.stringify({ problemId, learnerId, code, language }),
   });
 }
 

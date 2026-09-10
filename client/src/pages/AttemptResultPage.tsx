@@ -189,8 +189,19 @@ export const AttemptResultPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
             Evaluation Results
           </h1>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-            Attempt ID: <span className="font-mono">{attempt.id}</span> &bull; Submitted {new Date(attempt.submission?.submittedAt || attempt.createdAt).toLocaleTimeString()}
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center gap-2">
+            <span>Attempt ID: <span className="font-mono">{attempt.id}</span></span>
+            <span>&bull;</span>
+            <span>Submitted {new Date(attempt.submission?.submittedAt || attempt.createdAt).toLocaleTimeString()}</span>
+            <span
+              className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                attempt.submission?.language === "PY"
+                  ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                  : "bg-blue-500/10 text-blue-400 border border-blue-500/30"
+              }`}
+            >
+              {attempt.submission?.language === "PY" ? "Python" : "TypeScript"}
+            </span>
           </p>
         </div>
 
@@ -316,9 +327,20 @@ export const AttemptResultPage: React.FC = () => {
       {/* Submitted Code Reference */}
       <section className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-            Submitted TypeScript Code
-          </h3>
+          <div className="flex items-center gap-2.5">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+              Submitted Code
+            </h3>
+            <span
+              className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-medium ${
+                attempt.submission?.language === "PY"
+                  ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                  : "bg-blue-500/10 text-blue-400 border border-blue-500/30"
+              }`}
+            >
+              {attempt.submission?.language === "PY" ? "Python" : "TypeScript"}
+            </span>
+          </div>
           <button
             onClick={() => setShowCode(!showCode)}
             className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"

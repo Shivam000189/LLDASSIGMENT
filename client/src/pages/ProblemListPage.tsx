@@ -41,12 +41,12 @@ export const ProblemListPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="max-w-6xl mx-auto px-4 py-10 bg-black text-white">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-black tracking-tight text-white">
           Low-Level Design Practice Problems
         </h1>
-        <p className="mt-2 text-base text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-base text-neutral-400">
           Select a design problem to practice writing clean, extensible object-oriented TypeScript solutions.
         </p>
       </header>
@@ -61,10 +61,10 @@ export const ProblemListPage: React.FC = () => {
       )}
 
       {!loading && !error && problems.length === 0 && (
-        <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8">
-          <p className="text-gray-600 dark:text-gray-400 text-lg">No practice problems available yet.</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-            Make sure the database is seeded by running <code className="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded">npm run seed</code> on the server.
+        <div className="text-center py-16 bg-[#0d0d12] rounded-2xl border border-white/15 p-8">
+          <p className="text-white text-lg">No practice problems available yet.</p>
+          <p className="text-sm text-neutral-500 mt-1">
+            Make sure the database is seeded by running <code className="bg-black px-1.5 py-0.5 rounded text-white">npm run seed</code> on the server.
           </p>
         </div>
       )}
@@ -79,30 +79,30 @@ export const ProblemListPage: React.FC = () => {
               <div
                 key={problem.id}
                 onClick={() => navigate(`/problems/${problem.id}`)}
-                className="group flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md hover:border-indigo-500 dark:hover:border-indigo-500 transition cursor-pointer"
+                className="group flex flex-col justify-between bg-[#0d0d12] rounded-2xl border border-white/15 p-6 shadow-md hover:border-white/40 transition cursor-pointer"
               >
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
+                  <h2 className="text-xl font-bold text-white group-hover:text-neutral-200 transition">
                     {problem.title}
                   </h2>
-                  <p className="mt-3 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                  <p className="mt-3 text-sm text-neutral-400 line-clamp-2">
                     {teaser}
                   </p>
-                  <div className="mt-4 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                  <div className="mt-4 flex items-center gap-2 text-xs">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-[#16161f] text-white border border-white/15">
                       {problem.requirements?.length || 0} Requirements
                     </span>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full font-medium bg-[#16161f] text-white border border-white/15">
                       {problem.constraints?.length || 0} Constraints
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700/60 flex justify-end">
+                <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
                   <Link
                     to={`/problems/${problem.id}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition"
+                    className="inline-flex items-center justify-center px-5 py-2 text-xs font-black rounded-xl text-black bg-white hover:bg-neutral-200 transition shadow-sm"
                   >
                     Practice &rarr;
                   </Link>

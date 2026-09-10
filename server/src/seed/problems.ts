@@ -35,4 +35,21 @@ export const problems: Problem[] = [
     ],
     expectedEntities: ["Item", "Inventory", "PaymentStrategy", "VendingMachine"],
   },
+  {
+    id: "elevator-system",
+    title: "Elevator System",
+    requirements: [
+      "Manage multiple elevators servicing a building with multiple floors.",
+      "Handle pickup requests from any floor with direction awareness (Up/Down) and destination floor requests from inside elevator cars.",
+      "Track elevator motion, current floor, direction, and door states (Open, Closed).",
+      "Enforce maximum weight or passenger capacity limits per elevator car.",
+      "Dispatch elevators to service requests based on a scheduling strategy (e.g. Nearest Elevator, SCAN/LOOK algorithm).",
+    ],
+    constraints: [
+      "Decouple elevator car movement and door control from request dispatching logic.",
+      "Support pluggable or extensible dispatch/scheduling strategies (Strategy pattern).",
+      "Maintain consistent state transitions (Idle, Moving, Stopped, DoorOpening, DoorClosing).",
+    ],
+    expectedEntities: ["Elevator", "ElevatorController", "Request", "Floor"],
+  },
 ];

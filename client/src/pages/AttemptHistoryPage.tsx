@@ -167,6 +167,15 @@ export const AttemptHistoryPage: React.FC = () => {
                       #{attempts.length - index}
                     </span>
                     <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                        attempt.submission?.language === "PY"
+                          ? "bg-amber-500/10 text-amber-400 border border-amber-500/30"
+                          : "bg-blue-500/10 text-blue-400 border border-blue-500/30"
+                      }`}
+                    >
+                      {attempt.submission?.language || "TS"}
+                    </span>
+                    <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize border ${
                         statusColors[attempt.status] || "bg-gray-100 text-gray-700 border-gray-200"
                       }`}

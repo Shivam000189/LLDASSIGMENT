@@ -36,7 +36,7 @@ const SubmissionSchema = new Schema<ISubmission>(
     },
     language: {
       type: String,
-      enum: ["TS"],
+      enum: ["TS", "PY"],
       default: "TS",
       required: true,
     },

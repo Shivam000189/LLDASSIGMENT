@@ -7,7 +7,7 @@ const router = Router();
 // POST /api/attempts - Create attempt, respond immediately with 202, run evaluation in background
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { problemId, learnerId, code } = req.body;
+    const { problemId, learnerId, code, language } = req.body;
 
     // Validation: required fields
     if (!problemId || typeof problemId !== "string" || !problemId.trim()) {
@@ -34,6 +34,14 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
+    if (!language || (language !== "TS" && language !== "PY")) {
+      res.status(400).json({
+        success: false,
+        message: "language is required and must be either 'TS' or 'PY'.",
+      });
+      return;
+    }
+
     // Validation: verify problem exists
     const problemDoc = await ProblemModel.findById(problemId.trim());
     if (!problemDoc) {
@@ -56,7 +64,8 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
     const attempt = await attemptService.createPending(
       problemId.trim(),
       learnerId.trim(),
-      code.trim()
+      code.trim(),
+      language
     );
 
     // 2. Respond immediately with 202 and pending attempt
